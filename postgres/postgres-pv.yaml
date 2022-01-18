@@ -1,21 +1,24 @@
 apiVersion: v1
 kind: PersistentVolume
+
 metadata:
-    name: postgres-pv
-    labels:
-        type: local
+  name: postgres-pv
+  labels:
+    type: local
+
 spec:
-    # manual: data retained, must be reclaimed manually
-    storageClassName: manual
+  # manual: data retained, must be reclaimed manually
+  storageClassName: manual
 
-    capacity:
-        storage: 10Mi
+  capacity:
+    storage: 10Mi
 
-    # ReadWriteMany means volume can be mounted as read-write by multiple nodes
-    accessModes:
-        - ReadWriteMany
+  # ReadWriteOnce means volume can be mounted as read-write by single Node
+  accessModes:
+    - ReadWriteOnce
 
-    # The volume is at /mnt/postgres-data on cluster's Node
-    hostPath:
-        path: "/mnt/postgres-data"
+  # The volume is at /mnt/postgres-data on cluster's Node (i.e. your computer)
+  # In production, you wouldn't use hostPath but something else
+  hostPath:
+    path: "/mnt/postgres-data"
 

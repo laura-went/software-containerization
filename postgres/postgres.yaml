@@ -1,34 +1,41 @@
 apiVersion: apps/v1
-# TODO: might need to change this to a statefulset if we run into issues with horizontal scaling
 kind: Deployment
+
 metadata:
-    name: postgres
+  name: postgres
+
 spec:
-    selector:
-        matchLabels:
-            app: postgres
-    minReadySeconds: 5
-    template:
-        metadata:
-            labels:
-                app: postgres
-        spec:
-            containers:
-                - name: postgres
-                  image: postgres
-                  envFrom:
-                    - configMapRef:
-                        name: postgres-config
+  # The selector is how the deployment finds which pods to manage (should be the same as the template)
+  selector:
+    matchLabels:
+      app: postgres
 
-                  # standard postgres data path
-                  volumeMounts:
-                  - mountPath: /var/lib/postgresql/data
-                    name: postgresdb
+  minReadySeconds: 5
 
-                  # which ports to expose on the container
-                  ports:
-                  - containerPort: 5432
-            volumes:
-                - name: postgresdb
-                  persistentVolumeClaim:
-                      claimName: postgres-pvclaim
+  # Template used to create new pods
+  template:
+    metadata:
+      labels:
+        app: postgres
+
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+
+          # Mount at standard postgres path
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+
+          # Which ports to expose on
+          ports:
+            - containerPort: 5432
+
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: postgres-pvclaim

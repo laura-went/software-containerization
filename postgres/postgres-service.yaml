@@ -1,0 +1,14 @@
+# Maps a collection of pods to a single IP address
+# Accessible via env variables, or with a DNS addon (CoreDNS)
+kind: Service
+apiVersion: v1
+metadata:
+    name: postgres
+spec:
+    selector:
+        app: postgres
+
+    # The port to target on any selected pod.
+    # By default, targetPort == port, so don't need to set that explicitly
+    ports:
+    - port: 5432

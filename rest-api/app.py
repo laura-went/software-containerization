@@ -137,7 +137,7 @@ def verify_user():
     data = {'username': request.form['username'], 'passhash': request.form['passhash']}
     query = db.verify_user(data)
     if query['ok']:
-        return jsonify({'status': "User {data['username']} verified"})
+        return jsonify({'status': f"User {data['username']} verified"})
     else:
         abort(401)
 

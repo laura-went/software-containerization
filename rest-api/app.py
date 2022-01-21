@@ -106,8 +106,7 @@ class Database:
             return dict(ok=True)
 
 
-# TODO: from config & secrets!
-db = Database(os.environ['POSTGRES_SERVICE_HOST'], 'db', 'admin', 'admin')
+db = Database(os.environ['POSTGRES_SERVICE_HOST'], os.environ['POSTGRES_DB'], os.environ['POSTGRES_USER'], os.environ['POSTGRES_PASSWORD'])
 app = Flask(__name__)
 
 @app.route('/<username>/messages', methods=['GET'])

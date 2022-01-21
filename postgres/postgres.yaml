@@ -10,8 +10,6 @@ spec:
     matchLabels:
       app: postgres
 
-  minReadySeconds: 5
-
   # Template used to create new pods
   template:
     metadata:
@@ -21,10 +19,17 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres
+          image: postgres:14-alpine
+          imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:
                 name: postgres-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
 
           # Mount at standard postgres path
           volumeMounts:
@@ -38,4 +43,4 @@ spec:
       volumes:
         - name: postgresdb
           persistentVolumeClaim:
-            claimName: postgres-pvclaim
+            claimName: postgres-pvc

@@ -77,6 +77,33 @@ class Database:
             result.sort(key=lambda x: x['datetime'], reverse=True)
             return dict(ok=True, data=result)
 
+    def get_message_by_id(self, message_id):
+        with sqlite3.connect(self.db_name) as conn:
+            c = conn.cursor()
+            sql = 'select id, from_user, to_user, link, datetime, archived from messages where id = ?'
+            c.execute(sql, (message_id,))
+            row = c.fetchone()
+            if not row:
+                return dict(ok=False, error='Message not in database')
+
+            result = {'id': int(row[0]), 'from': row[1], 'to': row[2], 'link': row[3],
+                'datetime': int(row[4]), 'archived': bool(row[5])}
+            return dict(ok=True, data=result)
+
+    def archive_message(self, message_id):
+        with sqlite3.connect(self.db_name) as conn:
+            c = conn.cursor()
+            sql = 'select archived from messages where id = ?'
+            c.execute(sql, (message_id,))
+            archived_status = c.fetchone()[0]
+            if bool(archived_status):
+                return dict(ok=False, error='Message already archived')
+
+            sql = 'update messages set archived=1 where id = ?'
+            c.execute(sql, (message_id,))
+            conn.commit()
+            return dict(ok=True)
+
 
 db = Database('db.db')
 app = Flask(__name__)
@@ -88,7 +115,7 @@ def get_messages(username):
         return jsonify({'status': f"Retrieved messages of {username}",
                         'data': query['data']})
     else:
-        return abort(400)
+        abort(400)
 
 
 @app.route('/<username>/archive', methods=['GET'])
@@ -98,7 +125,22 @@ def get_archive(username):
         return jsonify({'status': f"Retrieved archived messages of {username}",
                         'data': query['data']})
     else:
-        return abort(400)
+        abort(400)
+
+@app.route('/<username>/archive', methods=['POST'])
+def archive(username):
+    if not 'id' in request.form:
+        abort(400)
+
+    query = db.get_message_by_id(request.form['id'])
+    if not query['ok']:
+        abort(400)
+
+    query = db.archive_message(request.form['id'])
+    if not query['ok']:
+        abort(400)
+
+    return jsonify({'status': f"Archived message {request.form['id']}"})
 
 
 @app.route('/<username>/messages', methods=['POST'])

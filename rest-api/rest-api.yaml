@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: rest-api
-          image: localhost:32000/rest-api
+          image: localhost:32000/rest-api:v1
           ports:
           - containerPort: 5000

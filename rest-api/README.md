@@ -5,3 +5,7 @@
 4. `kubectl apply -f .`
 
 Commands might need to be prefixed with `sudo`.
+
+To list images in local registry: `microk8s ctr images list | grep localhost`
+
+To delete an image in local registry: `microk8s ctr images rm <image>`

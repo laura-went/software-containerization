@@ -1,15 +1,16 @@
 #!flask/bin/python
 from flask import Flask, jsonify, request, abort
-import sqlite3
+import psycopg2
+import os
 import time
 
 
 # A wrapper around the database, modify this to use a postgres driver instead of sqlite.
 # Probably psycopg would be best: https://www.psycopg.org/
 class Database:
-    def __init__(self, db_name):
-        self.db_name = db_name
-        with sqlite3.connect(self.db_name) as conn:
+    def __init__(self, dbhost, dbname, dbuser, dbpassword):
+        self.db_info = f"host={dbhost} dbname={dbname} user={dbuser} password={dbpassword}"
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
 
             # Create tables as needed
@@ -20,29 +21,29 @@ class Database:
 
             c.execute('''
             create table if not exists messages
-            (id integer primary key, from_user text not null, to_user text not null, link text not null,
-            datetime text not null, archived boolean not null default 0 check (archived in (0,1)),
+            (id serial primary key, from_user text not null, to_user text not null, link text not null,
+            datetime text not null, archived boolean not null default false,
             foreign key (from_user) references users (username), foreign key (to_user) references users (username));
             ''')
 
     def add_user(self, user_data):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select count(*) from users where username=?'
+            sql = 'select count(*) from users where username=%s'
             c.execute(sql, (user_data['username'],))
             count = c.fetchone()[0]
             if count != 0:
                 return dict(ok=False, error=f"User {user_data['username']} already exists")
 
-            sql = 'insert into users (username, name, passhash) values (?, ?, ?)'
+            sql = 'insert into users (username, name, passhash) values (%s, %s, %s)'
             c.execute(sql, (user_data['username'], user_data['name'], user_data['passhash']))
             conn.commit()
             return dict(ok=True)
 
     def verify_user(self, verify_user_data):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select count(*) from users where username=? and passhash=?'
+            sql = 'select count(*) from users where username=%s and passhash=%s'
             c.execute(sql, (verify_user_data['username'], verify_user_data['passhash']))
             count = c.fetchone()[0]
             if count == 1:
@@ -51,9 +52,9 @@ class Database:
                 return dict(ok=False, error='Username and password do not match')
 
     def add_message(self, message_data):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select count(*) from users where username=?'
+            sql = 'select count(*) from users where username=%s'
             c.execute(sql, (message_data['from'],))
             if c.fetchone()[0] != 1:
                 return dict(ok=False, error='From not in database')
@@ -62,50 +63,51 @@ class Database:
             if c.fetchone()[0] != 1:
                 return dict(ok=False, error='To not in database')
 
-            sql = 'insert into messages (from_user, to_user, link, datetime) values (?, ?, ?, ?);'
+            sql = 'insert into messages (from_user, to_user, link, datetime) values (%s, %s, %s, %s);'
             c.execute(sql, (message_data['from'], message_data['to'], message_data['link'], int(time.time())))
             conn.commit()
             return dict(ok=True)
 
     def get_messages(self, username, archived=False):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select id, from_user, datetime, link from messages where to_user = ? and archived = ?;'
-            c.execute(sql, (username, (1 if archived else 0)))
+            sql = 'select id, from_user, datetime, link from messages where to_user = %s and archived = %s;'
+            c.execute(sql, (username, archived))
             rows = c.fetchall()
             result = [{'id': int(msg_id), 'from': from_user, 'datetime': int(datetime), 'link': link} for (msg_id, from_user, datetime, link) in rows]
             result.sort(key=lambda x: x['datetime'], reverse=True)
             return dict(ok=True, data=result)
 
     def get_message_by_id(self, message_id):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select id, from_user, to_user, link, datetime, archived from messages where id = ?'
+            sql = 'select id, from_user, to_user, link, datetime, archived from messages where id = %s'
             c.execute(sql, (message_id,))
             row = c.fetchone()
             if not row:
                 return dict(ok=False, error='Message not in database')
 
             result = {'id': int(row[0]), 'from': row[1], 'to': row[2], 'link': row[3],
-                'datetime': int(row[4]), 'archived': bool(row[5])}
+                'datetime': int(row[4]), 'archived': row[5]}
             return dict(ok=True, data=result)
 
     def archive_message(self, message_id):
-        with sqlite3.connect(self.db_name) as conn:
+        with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
-            sql = 'select archived from messages where id = ?'
+            sql = 'select archived from messages where id = %s'
             c.execute(sql, (message_id,))
             archived_status = c.fetchone()[0]
-            if bool(archived_status):
+            if archived_status:
                 return dict(ok=False, error='Message already archived')
 
-            sql = 'update messages set archived=1 where id = ?'
+            sql = 'update messages set archived=true where id = %s'
             c.execute(sql, (message_id,))
             conn.commit()
             return dict(ok=True)
 
 
-db = Database('db.db')
+# TODO: from config & secrets!
+db = Database(os.environ['POSTGRES_SERVICE_HOST'], 'db', 'admin', 'admin')
 app = Flask(__name__)
 
 @app.route('/<username>/messages', methods=['GET'])

@@ -17,10 +17,14 @@ spec:
         app: postgres
 
     spec:
+      # Use the following containeres:
       containers:
+        # A recent Postgres image based on alpine
         - name: postgres
           image: postgres:14-alpine
           imagePullPolicy: "IfNotPresent"
+
+          # Add data from the ConfigMap & Secret
           envFrom:
             - configMapRef:
                 name: postgres-config
@@ -36,7 +40,7 @@ spec:
             - mountPath: /var/lib/postgresql/data
               name: postgresdb
 
-          # Which ports to expose on
+          # Which ports to expose on -- 5432 is the default Postgres port
           ports:
             - containerPort: 5432
 

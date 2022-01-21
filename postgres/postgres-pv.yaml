@@ -1,3 +1,4 @@
+# Create a persistent volume for the database
 apiVersion: v1
 kind: PersistentVolume
 
@@ -8,6 +9,7 @@ metadata:
     app: postgres
 
 spec:
+  # manual means no automatic deleting of data
   storageClassName: manual
 
   capacity:

@@ -1,3 +1,4 @@
+# Manages pods associated with the REST API.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,17 +7,26 @@ metadata:
     app: rest-api
 
 spec:
+  # Select pods with the label "app" set to "rest-api"
   selector:
     matchLabels:
       app: rest-api
+
+  # How to create new pods
   template:
+    # New pods should have the label "app" set to "rest-api"
     metadata:
       labels:
         app: rest-api
+
     spec:
+      # New pods should have the following containers:
       containers:
+        # A container with the Flask image, running the REST API
         - name: rest-api
           image: localhost:32000/rest-api:v1
+
+          # Set variables from the ConfigMap & the Secret
           envFrom:
             - configMapRef:
                 name: postgres-config
@@ -27,5 +37,6 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
 
+          # On the container, expose port 5000 for Flask
           ports:
           - containerPort: 5000

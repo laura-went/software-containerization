@@ -1,15 +1,21 @@
+# Reserve a persistentvolume for the database.
+# This basically matches what's in the persistentvolume definition.
 apiVersion: v1
 kind: PersistentVolumeClaim
 
 metadata:
   name: postgres-pvc
+  # It's associated with the postgres app
   labels:
     app: postgres
 
 spec:
+  # manual means no automatic deleting of data
   storageClassName: manual
+
   accessModes:
     - ReadWriteMany
+
   resources:
     requests:
       storage: 100Mi

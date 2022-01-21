@@ -1,5 +1,5 @@
-# Maps a collection of pods to a single IP address
-# Accessible via env variables, or with a DNS addon
+# Maps all REST API pods to a single IP address.
+# Accessible via env variables, or with CoreDNS.
 kind: Service
 apiVersion: v1
 
@@ -7,11 +7,11 @@ metadata:
   name: rest-api
 
 spec:
-  # Select pods in the postgress app
+  # Select pods in the rest-api app
   selector:
     app: rest-api
 
   # Which port data is received on.
-  # By default, targetPort == port, so data will be forwarded to port 5432 of selected pods.
+  # By default, targetPort == port, so data will be forwarded to port 5000 of selected pods.
   ports:
     - port: 5000

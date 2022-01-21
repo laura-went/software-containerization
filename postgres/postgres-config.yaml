@@ -1,11 +1,14 @@
+# Configs for Postgres
 apiVersion: v1
 kind: ConfigMap
 
 metadata:
   name: postgres-config
+  # It's associated with the postgres app
   labels:
     app: postgres
 
+# Container postgres connection data:
 data:
   POSTGRES_DB: db
   POSTGRES_USER: admin

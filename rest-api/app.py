@@ -115,7 +115,9 @@ def get_messages(username):
         return jsonify({'status': f"Retrieved messages of {username}",
                         'data': query['data']})
     else:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
 
 @app.route('/<username>/archive', methods=['GET'])
@@ -125,20 +127,28 @@ def get_archive(username):
         return jsonify({'status': f"Retrieved archived messages of {username}",
                         'data': query['data']})
     else:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
 @app.route('/<username>/archive', methods=['POST'])
 def archive(username):
     if not 'id' in request.form:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
     query = db.get_message_by_id(request.form['id'])
     if not query['ok']:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
     query = db.archive_message(request.form['id'])
     if not query['ok']:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
     return jsonify({'status': f"Archived message {request.form['id']}"})
 
@@ -146,7 +156,7 @@ def archive(username):
 @app.route('/<username>/messages', methods=['POST'])
 def send_message(username):
     if not all(k in request.form for k in ['to', 'link']):
-        abort(400)
+        abort(jsonify(message=query['error']), 400)
 
     data = {'from': username, 'to': request.form['to'], 'link': request.form['link']}
     query = db.add_message(data)
@@ -154,13 +164,17 @@ def send_message(username):
     if query['ok']:
         return jsonify({'status': 'Message sent'})
     else:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
 
 @app.route('/add_user', methods=['POST'])
 def add_user():
     if not all(k in request.form for k in ['username', 'name', 'passhash']):
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
     data = {'username': request.form['username'], 'name': request.form['name'], 'passhash': request.form['passhash']}
     query = db.add_user(data)
@@ -168,20 +182,26 @@ def add_user():
     if query['ok']:
         return jsonify({'status': f"Added user {data['username']}"})
     else:
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
 
 @app.route('/verify_user', methods=['POST'])
 def verify_user():
     if not all(k in request.form for k in ['username', 'passhash']):
-        abort(400)
+        response = jsonify(message=query['error'])
+        response.status_code = 400
+        abort(response)
 
     data = {'username': request.form['username'], 'passhash': request.form['passhash']}
     query = db.verify_user(data)
     if query['ok']:
         return jsonify({'status': f"User {data['username']} verified"})
     else:
-        abort(401)
+        response = jsonify(message=query['error'])
+        response.status_code = 401
+        abort(response)
 
 
 if __name__ == '__main__':

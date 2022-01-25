@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolume
 
 metadata:
-  name: postgres-pv
+  name: postgres-pv-volume
   labels:
     type: local
     app: postgres
@@ -13,13 +13,13 @@ spec:
   storageClassName: manual
 
   capacity:
-    storage: 100Mi
+    storage: 1Gi
 
   accessModes:
     - ReadWriteMany
 
-  # The volume is at /mnt/postgres-data on cluster's Node (i.e. your computer)
+  # The volume is at /opt/postgres/data on cluster's Node (i.e. your computer)
   # In production, you wouldn't use hostPath but something else
   hostPath:
-    path: "/mnt/postgres-data"
+    path: "/opt/postgres/data"
 

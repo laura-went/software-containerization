@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<body>
+
+<!--<h3>Students - Flask SQLAlchemy example</h3>-->
+<!--<hr/>-->
+{% extends "layout.html" %}
+{% block body %}
+
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+
+{% if success %}
+<p class=success><strong>Success:</strong> {{ success }}
+{% endif %}
+
+<h2>Login</h2>
+
+<form class="form" action = "/login" method = "post">
+    <input type = "text" name = "username" placeholder = "Username" required/><br>
+    <input type = "password" name = "password" placeholder = "Password" required/><br>
+    <input type = "submit" value = "Submit" />
+</form>
+<button onclick="location.href='/register'" type="button">Register</button>
+{% endblock %}
+</body>
+</html>

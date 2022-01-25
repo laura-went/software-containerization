@@ -1,0 +1,15 @@
+<!doctype html>
+<title>LinkR</title>
+<div class="title">
+<h1><div class="maintitle">LinkR</div><div class="subtitle">The link sharing platform</div></h1>
+</div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% block body %}{% endblock %}

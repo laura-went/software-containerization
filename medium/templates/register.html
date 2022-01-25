@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<body>
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% if success %}
+<p class=success><strong>Success:</strong> {{ success }}
+{% endif %}
+
+<h2>Register</h2>
+<form class="form" action = "/registered" method = "post">
+    <input type = "text" name = "username" placeholder = "Username" required/><br>
+    <input type = "text" name = "password" placeholder = "Password" required/><br>
+    <input type = "submit" value = "Submit" />
+</form>
+{% endblock %}
+</body>
+</html>

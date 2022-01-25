@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<body>
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% if success %}
+<p class=success><strong>Success:</strong> {{ success }}
+{% endif %}
+
+<p>hi {{ username }} with {{ pwd }}</p>
+{% endblock %}
+</body>
+</html>

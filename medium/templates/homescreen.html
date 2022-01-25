@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% if success %}
+<p class=success><strong>Success:</strong> {{ success }}
+{% endif %}
+
+<p>Welcome,  <b>{{ username }}</b>!</p>
+
+<div class="column left">
+    <ul class="list">
+        {% for user in users %}
+        <li class="list-item">
+            <div class="list-item-content">
+                <form action="/pick_name" method = "post">
+                    <input type="hidden" name="from_name" value="{{username}}">
+                    <input type="hidden" name="to_name" value="{{user.name}}">
+                    <button class="name-btn" type="submit" name="pick_name">{{user.name}}</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="column right">
+    <p>Chatting with: <b>{{to_user}}</b></p>
+    <div class="msger-chat">
+        <div class="msg left-msg">
+
+            {% for message in messages %}
+            <div class="msg-bubble">
+                <div class="msg-info">
+                    <div class="msg-info-name" name="name">{{message.from_user}}</div>
+                    <div class="msg-info-time" name="time">{{message.time}}
+                        <form action="/delete_message" method = "post">
+                            <button><i class="fa fa-trash"></i></button>
+                            <input type="hidden" name="id" value="{{message.id}}">
+                            <input type="hidden" name="from_user" value="{{username}}">
+                            <input type="hidden" name="to_user" value="{{to_user}}">
+                        </form>
+                    </div>
+                </div>
+                <div class="msg-text" name="message">{{message.message}}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form class="msger-inputarea" action = "/new_message" method = "post">
+        <input type="text" class="msger-input" placeholder="Enter your message..." name="message" required>
+        <input type="hidden" name="from_user" value="{{username}}">
+        <input type="hidden" name="to_user" value="{{to_user}}">
+        <button type="submit" class="msger-send-btn" name="message-button">Send</button>
+    </form>
+</div>
+
+<form action="/logout">
+    <button class="logout" type="submit">Logout</button>
+</form>
+
+
+{% endblock %}
+</body>
+</html>

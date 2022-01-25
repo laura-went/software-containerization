@@ -1,0 +1,228 @@
+body {
+  color: #555;
+  background-color: #92e0ff;
+  font-family: sans-serif;
+  padding: 2px
+}
+
+.maintitle {
+    color: #995100;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-weight: 600;
+    font-size: 40px;
+}
+
+.subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 3em;
+    color: rgba(0, 0, 0, 0.4);
+    padding-bottom: 10px;
+    line-height: 1.3;
+}
+
+.title h1:after {
+    width: 400px;
+    height: 1px;
+    display: block;
+    content: "";
+    position: absolute;
+    margin-bottom: 25px;
+    background-color: #995100;
+}
+
+.form {
+    box-sizing: border-box;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    width: 500px;
+}
+.form input{
+    margin: 2px;
+}
+
+.column {
+  float: left;
+  padding: 10px;
+}
+
+.left {
+    width: 30%;
+    padding: 0 10px 0 0;
+    float: left;
+    height: 100%
+}
+
+.right {
+    width: 66%;
+    padding: 0 10px 0 0;
+    float: right;
+}
+
+
+
+.list {
+  border-radius: 2px;
+  list-style: none;
+  padding: 10px 20px;
+      background: white;
+
+}
+
+.list-item {
+  display: flex;
+  margin: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  &:last-child{
+    border-bottom: none;
+  }
+  &-content{
+    margin-left: 20px;
+    h4{
+      margin: 0;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  }
+}
+
+.name-btn {
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.name-btn:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  top: 14px;
+  right: -20px;
+  transition: 0.5s;
+  color: black;
+  font-weight: 500;
+}
+
+.name-btn:hover{
+  padding-right: 24px;
+  padding-left:8px;
+  color: black;
+  font-weight: 500;
+}
+
+.name-btn:hover:after {
+  opacity: 1;
+  right: 10px;
+}
+
+.msger-chat {
+    min-height: 50vh;
+    max-height: 50vh;
+    width: 100%;
+    max-width: 867px;
+    margin: 25px 10px;
+    border-radius: 5px;
+    background: grey;
+    box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+}
+
+.msger-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.msger-chat::-webkit-scrollbar {
+  width: 6px;
+}
+.msger-chat::-webkit-scrollbar-track {
+  background: #ddd;
+}
+.msger-chat::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+}
+
+
+.msg-bubble {homescreen.html
+  max-width: 450px;
+  padding: 15px;
+  border-radius: 15px;
+}
+.msg-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.msg-info-name {
+  margin-right: 10px;
+  font-weight: bold;
+}
+.msg-info-time {
+  font-size: 0.85em;
+}
+
+.left-msg .msg-bubble {
+    background: white;
+    color: black;
+    margin: 10px;
+}
+
+msger-inputarea {
+  display: flex;
+  padding: 10px;
+  background: #eee;
+}
+.msger-inputarea * {
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  font-size: 1em;
+}
+.msger-input {
+  background: #ddd;
+}
+.msger-send-btn {
+  margin-left: 10px;
+  background: rgb(0, 196, 65);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.msger-send-btn:hover {
+  background: rgb(0, 180, 50);
+}
+
+.logout{
+position: absolute;
+right:    10px;
+bottom:   10px;
+}
+
+
+@media only screen and (max-width: 800px) {
+
+   .left {
+        width: 100%;
+        padding-bottom: 10px;
+        float: none;
+    }
+
+    .right {
+        width: 100%;
+        padding-bottom: 10px;
+        float: none;
+    }
+
+}

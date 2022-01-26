@@ -62,6 +62,12 @@ class Database:
         with psycopg2.connect(self.db_info) as conn:
             c = conn.cursor()
 
+            sql = 'select count(*) from users where username=%s'
+            c.execute(sql, (verify_user_data['username'],))
+            count = c.fetchone()[0]
+            if count != 1:
+                return dict(ok=False, error=f"User {verify_user_data['username']} not found.")
+
             # Try to find rows in database matching username and password combination
             sql = 'select count(*) from users where username=%s and passhash=%s'
             c.execute(sql, (verify_user_data['username'], verify_user_data['passhash']))

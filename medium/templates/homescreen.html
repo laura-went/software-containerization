@@ -25,10 +25,8 @@
         {% for user in users %}
         <li class="list-item">
             <div class="list-item-content">
-                <form action="/pick_name" method = "post">
-                    <input type="hidden" name="from_name" value="{{username}}">
-                    <input type="hidden" name="to_name" value="{{user.name}}">
-                    <button class="name-btn" type="submit" name="pick_name">{{user.name}}</button>
+                <form action="/home" method = "get">
+                    <button class="name-btn" type="submit" name="picked_name" value="{{user}}">{{user}}</button>
                 </form>
             </div>
         </li>
@@ -36,16 +34,20 @@
     </ul>
 </div>
 <div class="column right">
-    <p>Chatting with: <b>{{to_user}}</b></p>
+    {% if to_user %}
+      <p>Links shared with you by <b>{{to_user}}</b></p>
+    {% else %}
+      <p>Select a user on the left.</p>
+    {% endif %}
     <div class="msger-chat">
         <div class="msg left-msg">
 
             {% for message in messages %}
             <div class="msg-bubble">
                 <div class="msg-info">
-                    <div class="msg-info-name" name="name">{{message.from_user}}</div>
-                    <div class="msg-info-time" name="time">{{message.time}}
-                        <form action="/delete_message" method = "post">
+                  <div class="msg-info-name" name="name">{{message.from}}{% if message.from == username %} (You){% endif %}</div>
+                    <div class="msg-info-time" name="time">{{message.datetime}}
+                        <form action="/home" method = "get">
                             <button><i class="fa fa-trash"></i></button>
                             <input type="hidden" name="id" value="{{message.id}}">
                             <input type="hidden" name="from_user" value="{{username}}">
@@ -53,18 +55,13 @@
                         </form>
                     </div>
                 </div>
-                <div class="msg-text" name="message">{{message.message}}</div>
+                <div class="msg-text" name="message">{{message.link}}</div>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <form class="msger-inputarea" action = "/new_message" method = "post">
-        <input type="text" class="msger-input" placeholder="Enter your message..." name="message" required>
-        <input type="hidden" name="from_user" value="{{username}}">
-        <input type="hidden" name="to_user" value="{{to_user}}">
-        <button type="submit" class="msger-send-btn" name="message-button">Send</button>
-    </form>
+    <p><a href="/new_message">Share a link...<a></p>
 </div>
 
 <form action="/logout">

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+
+{% if success %}
+<p class=success><strong>Success:</strong> {{ success }}
+{% endif %}
+
+<p>Welcome,  <b>{{ username }}</b>!</p>
+
+<div class="column left">
+</div>
+<div class="column right">
+    <p>Share a link:</p>
+    <form class="msger-inputarea" action = "/send_message" method = "post">
+        <input type="text" class="msger-input" placeholder="To user" name="to_user" required>
+        <input type="text" class="msger-input" placeholder="Enter your message..." name="message" required>
+        <input type="hidden" name="from_user" value="{{username}}">
+        <button type="submit" class="msger-send-btn" name="message-button">Send</button>
+    </form>
+</div>
+
+<form action="/logout">
+    <button class="logout" type="submit">Logout</button>
+</form>
+
+
+{% endblock %}
+</body>
+</html>

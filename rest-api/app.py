@@ -79,7 +79,7 @@ class Database:
 
             # Otherwise it's an error
             else:
-                return dict(ok=False, error='Username and password do not match')
+                return dict(ok=False, error='Username and password combination not found in database')
 
     # Add message_data with keys ['from', 'to', 'link'] to database
     def add_message(self, message_data):

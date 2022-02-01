@@ -21,7 +21,7 @@ spec:
       containers:
         # A recent Postgres image based on alpine
         - name: postgres
-          image: postgres:14-alpine
+          image: {{ .Values.postgres.image }}
           imagePullPolicy: "IfNotPresent"
 
           # Add data from the ConfigMap & Secret
@@ -40,9 +40,9 @@ spec:
             - mountPath: /var/lib/postgresql/data
               name: postgresdb
 
-          # Which ports to expose on -- 5432 is the default Postgres port
+          # Which ports to expose on
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.postgres.port }}
 
       volumes:
         - name: postgresdb

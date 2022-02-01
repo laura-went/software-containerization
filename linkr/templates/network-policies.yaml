@@ -15,7 +15,7 @@ spec:
           matchLabels:
             app: rest-api
       ports:
-        - port: 5432
+        - port: {{ .Values.postgres.port }}
   egress: []
 
 ---
@@ -37,14 +37,14 @@ spec:
           matchLabels:
             app: frontend
       ports:
-        - port: 5000
+        - port: {{ .Values.restapi.port }}
   egress:
     - to:
       - podSelector:
           matchLabels:
             app: postgres
       ports:
-        - port: 5432
+        - port: {{ .Values.postgres.port }}
 
 ---
 
@@ -61,11 +61,11 @@ spec:
   - Egress
   ingress:
     - ports:
-      - port: 5000
+      - port: {{ .Values.frontend.port }}
   egress:
     - to:
       - podSelector:
           matchLabels:
             app: rest-api
       ports:
-        - port: 5000
+        - port: {{ .Values.restapi.port }}

@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 
 metadata:
-  name: frontend-service
+  name: frontend
 
 spec:
   selector:
@@ -10,4 +10,4 @@ spec:
 
   ports:
     - protocol: TCP
-      port: 5000
+      port: {{ .Values.frontend.port }}

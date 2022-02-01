@@ -13,7 +13,7 @@ spec:
   storageClassName: manual
 
   capacity:
-    storage: 100Mi
+    storage: {{ .Values.postgres.storage.capacity }}
 
   accessModes:
     - ReadWriteMany
@@ -21,5 +21,5 @@ spec:
   # The volume is at /mnt/postgres-data on cluster's Node (i.e. your computer)
   # In production, you wouldn't use hostPath but something else
   hostPath:
-    path: "/mnt/postgres-data"
+    path: {{ .Values.postgres.storage.datapath }}
 

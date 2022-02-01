@@ -1,0 +1,21 @@
+http:
+  hostname: linkr.local
+  tls_secret_name: my-tls-secret
+frontend:
+  secrets:
+    FLASK_SECRET_KEY: somethingsecret
+  port: 5000
+  image: localhost:32000/frontend:latest
+postgres:
+  dbname: db
+  dbuser: admin
+  secrets:
+    dbpass: admin
+  storage:
+    capacity: 100Mi
+    datapath: /mnt/postgres-data
+  port: 5432
+  image: postgres:14-alpine
+restapi:
+  port: 5000
+  image: localhost:32000/rest-api:latest

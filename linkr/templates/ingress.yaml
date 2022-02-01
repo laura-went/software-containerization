@@ -5,16 +5,16 @@ metadata:
 spec:
   tls:
   - hosts:
-    - linkr.local
-    secretName: my-tls-secret
+    - {{ .Values.http.hostname }}
+    secretName: {{ .Values.http.tls_secret_name }}
   rules:
-    - host: linkr.local
+    - host: {{ .Values.http.hostname }}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend-service
+                name: frontend
                 port:
-                  number: 5000
+                  number: {{ .Values.frontend.port }}

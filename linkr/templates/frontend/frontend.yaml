@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: localhost:32000/frontend:v1
+          image: {{ .Values.frontend.image }}
           ports:
-            - containerPort: 5000
+            - containerPort: {{ .Values.frontend.port }}
           env:
             - name: SECRET_KEY
               valueFrom:

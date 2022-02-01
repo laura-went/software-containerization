@@ -10,5 +10,5 @@ metadata:
 
 # Container postgres connection data:
 data:
-  POSTGRES_DB: db
-  POSTGRES_USER: admin
+  POSTGRES_DB: {{ .Values.postgres.dbname }}
+  POSTGRES_USER: {{ .Values.postgres.dbuser }}

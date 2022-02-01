@@ -24,7 +24,7 @@ spec:
       containers:
         # A container with the Flask image, running the REST API
         - name: rest-api
-          image: localhost:32000/rest-api:v2
+          image: {{ .Values.restapi.image }}
 
           # Set variables from the ConfigMap & the Secret
           envFrom:
@@ -39,4 +39,4 @@ spec:
 
           # On the container, expose port 5000 for Flask
           ports:
-          - containerPort: 5000
+          - containerPort: {{ .Values.restapi.port }}

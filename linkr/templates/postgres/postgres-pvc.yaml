@@ -10,11 +10,16 @@ metadata:
     app: postgres
 
 spec:
+  {{ if .Values.deployToGcp }}
+  accessModes:
+    - ReadWriteOnce
+  {{ else }}
   # manual means no automatic deleting of data
   storageClassName: manual
 
   accessModes:
     - ReadWriteMany
+  {{ end }}
 
   resources:
     requests:

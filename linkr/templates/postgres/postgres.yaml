@@ -29,6 +29,8 @@ spec:
             - configMapRef:
                 name: postgres-config
           env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

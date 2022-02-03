@@ -1,3 +1,6 @@
+# Uncomment this to build for GCP
+# deployToGcp: true
+
 http:
   hostname: linkr.local
   tls_secret_name: my-tls-secret
@@ -5,7 +8,8 @@ frontend:
   secrets:
     FLASK_SECRET_KEY: somethingsecret
   port: 5000
-  image: localhost:32000/frontend:latest
+  # image: localhost:32000/frontend:latest
+  image: europe-west4-docker.pkg.dev/softcont/linkr/frontend:latest
 postgres:
   dbname: db
   dbuser: admin
@@ -18,4 +22,5 @@ postgres:
   image: postgres:14-alpine
 restapi:
   port: 5000
-  image: localhost:32000/rest-api:latest
+  # image: localhost:32000/rest-api:latest
+  image: europe-west4-docker.pkg.dev/softcont/linkr/rest-api:latest

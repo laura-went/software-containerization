@@ -1,0 +1,14 @@
+{{- if .Values.deployToGcp }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkr-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+{{- end }}

@@ -1,2 +1,6 @@
 __pycache__/
 .mypy_cache/
+.keys/
+.csr
+.key
+.pem

@@ -1,3 +1,8 @@
+# About
+Authors: Group 8 (Laura Went, Berkay Ersever, Alexander Balgavy)
+
+Github repository: https://github.com/laura-went/software-containerization
+
 # How to install
 1. Install microk8s
 2. In this guide, kubectl = `sudo microk8s kubectl`, and helm = `sudo microk8s helm3`
